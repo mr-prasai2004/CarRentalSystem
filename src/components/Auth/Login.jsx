@@ -47,7 +47,7 @@ const Login = () => {
         } else if (userRole === "rental") {
           navigate("/rentalDashboard");
         } else {
-          navigate("/customer-dashboard");
+          navigate("/customerDashboard");
         }
       } catch (decodeError) {
         console.error("Error decoding token:", decodeError);

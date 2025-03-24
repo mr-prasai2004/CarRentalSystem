@@ -5,7 +5,7 @@ const authRoutes = require('./routes/authRoutes');
 const carRoutes = require('./routes/cars'); 
 const sequelize = require("./config/db");
 const User = require("./models/User");
-
+const adminRoutes = require("./routes/admin");
 const app = express();
 const PORT = 5000;
 
@@ -15,6 +15,7 @@ app.use(bodyParser.json());
 // ✅ Use the imported routes
 app.use("/api/auth", authRoutes);
 app.use("/api/cars", carRoutes);
+app.use("/api/admin", adminRoutes);
 
 // ✅ Global Error Handler (Prevents Crashes)
 app.use((err, req, res, next) => {

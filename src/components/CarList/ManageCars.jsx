@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { getAllCars, addCar, updateCar, deleteCar } from "../../services/api";
 
 const ManageCars = () => {
+  const navigate = useNavigate(); // Initialize navigate
   const [cars, setCars] = useState([]);
   const [carForm, setCarForm] = useState({
     model: "",
@@ -11,7 +13,7 @@ const ManageCars = () => {
     status: "available",
     image_url: "",
   });
-  const [editingCar, setEditingCar] = useState(null); // Track the car being edited
+  const [editingCar, setEditingCar] = useState(null);
 
   useEffect(() => {
     fetchCars();
@@ -28,15 +30,13 @@ const ManageCars = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    console.log("Submitting car data:", carForm); // 🛠 Debugging log
-    
+
     if (editingCar) {
       await updateCar(editingCar, carForm);
     } else {
       await addCar(carForm);
     }
-  
+
     fetchCars();
     setEditingCar(null);
     setCarForm({
@@ -48,7 +48,6 @@ const ManageCars = () => {
       image_url: "",
     });
   };
-  
 
   const handleEdit = (car) => {
     setCarForm(car);
@@ -62,9 +61,18 @@ const ManageCars = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-3xl font-bold text-gray-800 mb-4">
-        {editingCar ? "Edit Car" : "Add Car"}
-      </h2>
+      {/* Back Button & Title */}
+      <div className="flex items-center mb-4">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center text-white bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded-lg shadow-md transition duration-300"
+        >
+          ← Back
+        </button>
+        <h2 className="text-3xl font-bold text-gray-800 ml-4">
+          {editingCar ? "Edit Car" : "Add Car"}
+        </h2>
+      </div>
 
       <form onSubmit={handleSubmit} className="bg-white p-4 shadow-md rounded">
         <input

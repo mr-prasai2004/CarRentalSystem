@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import `useNavigate`
 import Navbar from "../Navbar/Navbar";
 import UserManagement from "../UserManagement/UserManagement";
 import ManageCars from "../CarList/ManageCars";
 
 const AdminDashboard = () => {
+  const navigate = useNavigate(); // Initialize `useNavigate`
   const [dashboardStats, setDashboardStats] = useState({
     totalUsers: 0,
     totalCars: 0,
@@ -12,7 +13,7 @@ const AdminDashboard = () => {
     totalRevenue: 0,
   });
   const [recentActivities, setRecentActivities] = useState([]);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -33,22 +34,37 @@ const AdminDashboard = () => {
       } catch (error) {
         console.error("Error fetching data", error);
       } finally {
-        setLoading(false); // Stop loading when data is fetched
+        setLoading(false);
       }
     };
 
     fetchDashboardData();
   }, []);
 
+  // Logout Function
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove token from localStorage
+    localStorage.removeItem("role"); // Remove role
+    navigate("/"); // Redirect to the home page
+  };
+
   return (
     <div className="bg-gray-50 min-h-screen p-6">
       <Navbar />
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Admin Dashboard</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-lg shadow-md"
+        >
+          Logout
+        </button>
+      </div>
 
       {/* Dashboard Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {loading ? (
-          <div className="w-full h-40 bg-gray-200 rounded-lg animate-pulse" /> // Loading placeholder
+          <div className="w-full h-40 bg-gray-200 rounded-lg animate-pulse" />
         ) : (
           <>
             <div className="bg-white shadow-lg rounded-lg p-6 text-center">
@@ -81,9 +97,8 @@ const AdminDashboard = () => {
             Manage Users
           </Link>
           <Link to="/ManageCars" className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-md text-center">
-  Manage Cars
-</Link>
-
+            Manage Cars
+          </Link>
           <Link to="/admin/bookings" className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg shadow-md text-center">
             View Bookings
           </Link>
