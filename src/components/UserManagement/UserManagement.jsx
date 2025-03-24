@@ -24,8 +24,12 @@ const UserManagement = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/api/users");
-      setUsers(response.data);
+      const response = await axios.get("http://localhost:5000/api/auth/users");
+      
+      // Ensure only users that are NOT admins are displayed
+      const filteredUsers = response.data.filter(user => user.role !== "admin");
+      
+      setUsers(filteredUsers);
       setError(null);
     } catch (err) {
       setError("Failed to fetch users");
@@ -65,23 +69,26 @@ const UserManagement = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent form default behavior
+  
+    if (!currentUser.id) {
+      console.error("User ID is missing.");
+      return;
+    }
+  
     try {
-      if (modalType === "add") {
-        await axios.post("http://localhost:5000/api/users", currentUser);
-      } else if (modalType === "edit") {
-        await axios.put(`http://localhost:5000/api/users/${currentUser.id}`, currentUser);
-      } else if (modalType === "delete") {
-        await axios.delete(`http://localhost:5000/api/users/${currentUser.id}`);
-      }
-      
-      setShowModal(false);
-      fetchUsers(); // Refresh the user list
-    } catch (err) {
-      setError(`Failed to ${modalType} user`);
-      console.error(`Error ${modalType}ing user:`, err);
+      const response = await axios.put(
+        `http://localhost:5000/api/users/${currentUser.id}`, 
+        currentUser
+      );
+      console.log("User updated:", response.data);
+      fetchUsers(); // Refresh user list after update
+      setShowModal(false); // Close modal after success
+    } catch (error) {
+      console.error("Error editing user:", error);
     }
   };
+  
 
   return (
     <div className="bg-gray-50 min-h-screen p-6">
@@ -113,6 +120,7 @@ const UserManagement = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
+              
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Name
                 </th>
