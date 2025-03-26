@@ -36,71 +36,67 @@ Make sure you have the following installed:
    cd car-rental-system
 2. Install dependencies:
 
-    bash
+    ```bash
     npm install
 
 3. Start the development server:
 
-    bash
+    ```bash
     npm run dev
-    Open your browser and go to http://localhost:3000 to view the frontend.
 
-Backend Setup
-Go to the backend directory:
+     Open your browser and go to http://localhost:3000 to view the frontend.
 
-bash
-Copy
-Edit
-cd backend
-Install dependencies:
+## Backend Setup
+1. Go to the backend directory:
 
-bash
-Copy
-Edit
-npm install
-Create a .env file in the backend folder and add your database credentials and JWT secret:
+     ```bash
+    cd backend
+2. Install dependencies:
+    ```bash
+    npm install
 
-env
-Copy
-Edit
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your-password
-DB_NAME=car_rental_db
-JWT_SECRET=your-secret-key
-Start the backend server:
+3. Create a .env file in the backend folder and add your database credentials and JWT secret:
+     ```bash
+    env
 
-bash
-Copy
-Edit
-npm start
-The backend will be running at http://localhost:5000.
+    DB_HOST=localhost
+    DB_USER=root
+    DB_PASSWORD=your-password
+    DB_NAME=car_rental_db
+    JWT_SECRET=your-secret-key
 
-Database Setup
-Create a MySQL database car_rental_db or change the database name in the .env file.
+3. Start the backend server:
 
-Run the SQL queries provided in the backend/db/setup.sql to set up the necessary tables.
+    ```bash
+    npm start
 
-API Endpoints
-POST /api/signup: User signup with OTP verification
+4. The backend will be running at http://localhost:5000.
 
-POST /api/login: User login with JWT
+## Database Setup
+1. Create a MySQL database car_rental_db or change the database name in the .env file.
 
-GET /api/cars: Get list of available cars
+2. Run the SQL queries provided in the backend/db/setup.sql to set up the necessary tables.
 
-POST /api/bookings: Create a new booking
+## API Endpoints
+    POST /api/signup: User signup with OTP verification
 
-GET /api/bookings: Get user bookings
+    POST /api/login: User login with JWT
 
-DELETE /api/bookings/:id: Cancel a booking
+    GET /api/cars: Get list of available cars
 
-GET /api/admin/cars: Get all cars (Admin)
+    POST /api/bookings: Create a new booking
 
-POST /api/admin/cars: Add a new car (Admin)
+    GET /api/bookings: Get user bookings
 
-PUT /api/admin/cars/:id: Update car details (Admin)
+    DELETE /api/bookings/:id: Cancel a booking
 
-DELETE /api/admin/cars/:id: Delete a car (Admin)
+    GET /api/admin/cars: Get all cars (Admin)
 
-Contributing
-Feel free to fork the repository and submit pull requests for improvements or bug fixes.
+    POST /api/admin/cars: Add a new car (Admin)
+
+    PUT /api/admin/cars/:id: Update car details (Admin)
+
+    DELETE /api/admin/cars/:id: Delete a car (Admin)
+
+## Contributing
+    Feel free to fork the repository and submit pull requests for improvements or bug fixes.
