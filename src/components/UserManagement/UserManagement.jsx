@@ -15,6 +15,7 @@ const UserManagement = () => {
     phone: "",
     role: "user",
   });
+  
 
   // Fetch users on component mount
   useEffect(() => {
@@ -23,6 +24,7 @@ const UserManagement = () => {
 
   const fetchUsers = async () => {
     setLoading(true);
+    setError(null);
     try {
       const response = await axios.get("http://localhost:5000/api/auth/users");
       
@@ -30,10 +32,9 @@ const UserManagement = () => {
       const filteredUsers = response.data.filter(user => user.role !== "admin");
       
       setUsers(filteredUsers);
-      setError(null);
     } catch (err) {
-      setError("Failed to fetch users");
       console.error("Error fetching users:", err);
+      setError(err.response?.data?.message || "Failed to fetch users. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -69,26 +70,47 @@ const UserManagement = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent form default behavior
-  
-    if (!currentUser.id) {
-      console.error("User ID is missing.");
-      return;
-    }
-  
+    e.preventDefault();
+    setError(null);
+
     try {
-      const response = await axios.put(
-        `http://localhost:5000/api/users/${currentUser.id}`, 
-        currentUser
-      );
-      console.log("User updated:", response.data);
-      fetchUsers(); // Refresh user list after update
-      setShowModal(false); // Close modal after success
+      if (modalType === "add") {
+        // Handle adding new user
+        const response = await axios.post("http://localhost:5000/api/auth/users", currentUser);
+
+        console.log("User added:", response.data);
+      } else if (modalType === "edit") {
+        // Handle editing existing user
+        if (!currentUser.id) {
+          throw new Error("User ID is missing");
+        }
+        const response = await axios.put(
+          `http://localhost:5000/api/auth/users/${currentUser.id}`, 
+          currentUser
+        );
+        console.log("User updated:", response.data);
+      } else if (modalType === "delete") {
+        // Handle deleting user
+        if (!currentUser.id) {
+          throw new Error("User ID is missing");
+        }
+        const response = await axios.delete(
+          `http://localhost:5000/api/auth/users/${currentUser.id}`
+        );
+        console.log("User deleted:", response.data);
+      }
+
+      // Refresh user list and close modal
+      fetchUsers();
+      setShowModal(false);
     } catch (error) {
-      console.error("Error editing user:", error);
+      console.error("Error in user operation:", error);
+      setError(
+        error.response?.data?.message || 
+        `Failed to ${modalType} user. Please try again.`
+      );
     }
   };
-  
 
   return (
     <div className="bg-gray-50 min-h-screen p-6">
@@ -120,7 +142,9 @@ const UserManagement = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-              
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  ID
+                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Name
                 </th>
@@ -148,6 +172,7 @@ const UserManagement = () => {
               ) : (
                 users.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">{user.id}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{user.phone}</td>
@@ -240,13 +265,14 @@ const UserManagement = () => {
 
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phone">
-                    Phone
+                    id
                   </label>
                   <input
                     type="tel"
-                    id="phone"
-                    name="phone"
-                    value={currentUser.phone}
+                    id="id"
+                    name="id"
+                    disabled
+                    value={currentUser.id}
                     onChange={handleInputChange}
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />

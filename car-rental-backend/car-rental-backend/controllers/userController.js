@@ -74,24 +74,55 @@ const getUsers = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const { id } = req.params;
-  const { name, email, role } = req.body; // Ensure the expected fields
+  const { name, email, role } = req.body;
 
   try {
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(id); // Find user by primary key (ID)
+    
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: 'User not found' });
     }
 
-    user.name = name || user.name;
-    user.email = email || user.email;
-    user.role = role || user.role;
+    // Update user fields
+    await user.update({ name, email, role });
 
-    await user.save();
-    res.json({ message: "User updated successfully", user });
+    res.json({ message: 'User updated successfully' });
   } catch (error) {
-    console.error("Error updating user:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error('Database error:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
-module.exports = { signup, login, getUsers, updateUser };
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findByPk(id);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    await user.destroy(); // Delete user
+
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Database error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+const createUser = async (req, res) => {
+  try {
+    const { name, email, password, role } = req.body;
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    const newUser = await User.create({ name, email, password, role });
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).json({ error: "Server error", details: error.message });
+  }
+};
+
+module.exports = { signup, login, getUsers, updateUser, deleteUser, createUser };
