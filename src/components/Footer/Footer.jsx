@@ -10,7 +10,7 @@ import {
 const FooterLinks = [
   {
     title: "Home",
-    link: "/#",
+    link: "/home",
   },
   {
     title: "About",
@@ -28,6 +28,7 @@ const FooterLinks = [
 
 const Footer = () => {
   return (
+    <section id="contact">
     <div className="bg-gray-100 dark:bg-dark mt-14 rounded-t-3xl">
       <section className="container">
         <div className=" grid md:grid-cols-3 py-5">
@@ -89,6 +90,7 @@ const Footer = () => {
         </div>
       </section>
     </div>
+    </section>
   );
 };
 

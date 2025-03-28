@@ -1,28 +1,34 @@
 import React, { useState } from "react";
 import { BiSolidSun, BiSolidMoon } from "react-icons/bi";
 import { HiMenuAlt3, HiMenuAlt1 } from "react-icons/hi";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import ResponsiveMenu from "./ResponsiveMenu";
 
 export const Navlinks = [
-  { id: 1, name: "HOME", link: "/#" },
-  { id: 2, name: "CARS", link: "/#cars" },
-  { id: 3, name: "ABOUT", link: "/#about" },
-  { id: 4, name: "BOOKING", link: "/#booking" },
+  { id: 1, name: "HOME", link: "home" },
+  { id: 2, name: "CARS", link: "cars" },
+  { id: 3, name: "ABOUT", link: "about" },
+  { id: 4, name: "CONTACT US", link: "contact" },
 ];
 
 const Navbar = ({ theme, setTheme }) => {
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user")); // Get user info from localStorage
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  
   const toggleMenu = () => setShowMenu(!showMenu);
 
   const handleLogout = () => {
-    localStorage.removeItem("user"); // Remove user from localStorage
-    navigate("/"); // Redirect to home (App.js)
-    window.location.reload(); // Refresh to update state
+    localStorage.removeItem("user");
+    navigate("/");
+    window.location.reload();
+  };
+
+  const scrollToSection = (id) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
@@ -36,45 +42,58 @@ const Navbar = ({ theme, setTheme }) => {
             <ul className="flex items-center gap-8">
               {Navlinks.map(({ id, name, link }) => (
                 <li key={id} className="py-4">
-                  <Link to={link} className="text-lg font-medium hover:text-primary py-2 hover:border-b-2 hover:border-primary transition-colors duration-500">
+                  <button
+                    onClick={() => scrollToSection(link)}
+                    className="text-lg font-medium hover:text-primary py-2 hover:border-b-2 hover:border-primary transition-colors duration-500"
+                  >
                     {name}
-                  </Link>
+                  </button>
                 </li>
               ))}
-              
+
               {user ? (
                 <>
-                  {/* Dashboard link based on role */}
                   {user.role === "admin" && (
                     <li className="py-4">
-                      <Link to="/AdminDashboard" className="text-lg font-medium hover:text-primary py-2 hover:border-b-2 hover:border-primary transition-colors duration-500">
+                      <Link
+                        to="/AdminDashboard"
+                        className="text-lg font-medium hover:text-primary py-2 hover:border-b-2 hover:border-primary transition-colors duration-500"
+                      >
                         Admin Dashboard
                       </Link>
                     </li>
                   )}
                   {user.role === "rental" && (
                     <li className="py-4">
-                      <Link to="/RentalDashboard" className="text-lg font-medium hover:text-primary py-2 hover:border-b-2 hover:border-primary transition-colors duration-500">
+                      <Link
+                        to="/RentalDashboard"
+                        className="text-lg font-medium hover:text-primary py-2 hover:border-b-2 hover:border-primary transition-colors duration-500"
+                      >
                         Rental Dashboard
                       </Link>
                     </li>
                   )}
-                  
-                  {/* Logout button */}
+
                   <li className="py-4">
-                    <button onClick={handleLogout} className="text-lg font-medium text-red-600 hover:text-red-800">
+                    <button
+                      onClick={handleLogout}
+                      className="text-lg font-medium text-red-600 hover:text-red-800"
+                    >
                       Logout
                     </button>
                   </li>
                 </>
               ) : (
                 <li className="py-4">
-                  <Link to="/login" className="text-lg font-medium hover:text-primary py-2 hover:border-b-2 hover:border-primary transition-colors duration-500">
+                  <Link
+                    to="/login"
+                    className="text-lg font-medium hover:text-primary py-2 hover:border-b-2 hover:border-primary transition-colors duration-500"
+                  >
                     Login
                   </Link>
                 </li>
               )}
-              
+
               {theme === "dark" ? (
                 <BiSolidSun onClick={() => setTheme("light")} className="text-2xl cursor-pointer" />
               ) : (
@@ -82,8 +101,7 @@ const Navbar = ({ theme, setTheme }) => {
               )}
             </ul>
           </nav>
-          
-          {/* Mobile menu */}
+
           <div className="flex items-center gap-4 md:hidden">
             {theme === "dark" ? (
               <BiSolidSun onClick={() => setTheme("light")} className="text-2xl cursor-pointer" />
@@ -98,7 +116,13 @@ const Navbar = ({ theme, setTheme }) => {
           </div>
         </div>
       </div>
-      <ResponsiveMenu showMenu={showMenu} user={user} handleLogout={handleLogout} />
+      <ResponsiveMenu
+        showMenu={showMenu}
+        user={user}
+        handleLogout={handleLogout}
+        scrollToSection={scrollToSection}
+        setShowMenu={setShowMenu}
+      />
     </div>
   );
 };

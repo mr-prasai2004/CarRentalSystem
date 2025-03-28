@@ -2,6 +2,7 @@ import React from "react";
 
 const Contact = () => {
   return (
+   
     <>
       <span id="contact"></span>
       <div data-aos="zoom-in" className="dark:bg-black dark:text-white py-14">

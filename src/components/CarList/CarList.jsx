@@ -18,6 +18,7 @@ const CarList = () => {
   };
 
   return (
+    <section id="cars">
     <div className="container mx-auto p-6">
       <h2 className="text-3xl font-bold text-blue-600 mb-6">Available Cars</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -48,6 +49,7 @@ const CarList = () => {
         </div>
       )}
     </div>
+    </section>
   );
 };
 

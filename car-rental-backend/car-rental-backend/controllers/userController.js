@@ -124,5 +124,28 @@ const createUser = async (req, res) => {
     res.status(500).json({ error: "Server error", details: error.message });
   }
 };
+const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;  // Get user ID from JWT token
+    const { name, email, phone } = req.body;
 
-module.exports = { signup, login, getUsers, updateUser, deleteUser, createUser };
+    const user = await User.findByPk(userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.name = name || user.name;
+    user.email = email || user.email;
+    user.phone = phone || user.phone;
+
+    await user.save();  // Save updated profile
+
+    res.json({ message: "Profile updated successfully", user });
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = { signup, login, getUsers, updateUser, deleteUser, createUser, updateProfile };
