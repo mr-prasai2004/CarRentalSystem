@@ -28,11 +28,19 @@ const authenticateJWT = (req, res, next) => {
 // Middleware to check for specific roles
 const authorizeRole = (roles) => {
   return (req, res, next) => {
+    console.log("🔥 authorizeRole check");
+    console.log("Required roles:", roles);
+    console.log("Decoded user from token:", req.user);
+
     if (!req.user || !roles.includes(req.user.role)) {
+      console.log("❌ Unauthorized - role not allowed or missing");
       return res.status(403).json({ error: "Access Forbidden: Unauthorized Role" });
     }
+
+    console.log("✅ Authorized user");
     next();
   };
 };
+
 
 module.exports = { authenticateJWT, authorizeRole };

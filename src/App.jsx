@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { HashRouter as Router, Routes, Route } from "react-router-dom"; 
+import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -22,6 +22,8 @@ import CustomerDashboard from "./components/dashboard/CustomerDashboard";
 
 const App = () => {
   // Dark mode start
+
+
   const [theme, setTheme] = useState(
     localStorage.getItem("theme") ? localStorage.getItem("theme") : "light"
   );
@@ -53,12 +55,14 @@ const App = () => {
     handleThemeChange(theme);
   }, [theme]);
 
+
+
   return (
     <Router>
       <div className="bg-white dark:bg-black dark:text-white text-black overflow-x-hidden">
         <Routes>
           {/* Authentication Routes */}
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={ <Login />} />
           <Route path="/signup" element={<Signup />} />
 
           {/* Dashboard Routes */}
@@ -83,7 +87,7 @@ const App = () => {
                 <About />
                 <Services />
                 <CarList />
-                <Footer/>
+                <Footer />
               </>
             }
           />

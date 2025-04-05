@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaCar, FaCheckCircle, FaTools, FaClock } from "react-icons/fa";
 import { motion } from "framer-motion";
+import ManageCars from "../CarList/ManageCars";
+
 
 const RentalDashboard = () => {
   const [carStats, setCarStats] = useState({
@@ -30,6 +32,8 @@ const RentalDashboard = () => {
     fetchDashboardData();
   }, []);
 
+  
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <h1 className="text-3xl font-bold mb-6">Rental Dashboard</h1>
@@ -56,7 +60,7 @@ const RentalDashboard = () => {
       <div className="flex gap-4 mb-6">
         {[
           { text: "Add New Car", link: "/rental/add-car" },
-          { text: "Manage Cars", link: "/rental/manage-cars" },
+          { text: "Manage Cars", link: "/ManageCars" },
           { text: "Manage Bookings", link: "/rental/bookings" },
         ].map((action, index) => (
           <Link 
